@@ -1,3 +1,5 @@
+import os
+os.system("pip -qq install customtkinter")
 import customtkinter as ctk
 import math
 
@@ -37,7 +39,7 @@ def cos(a):
     return math.cos(a)
 
 class MyButtonFrame(ctk.CTkFrame):  # Create buttons
-    def __init__(self, master, console_callback):
+    def __init__(self, master):
         super().__init__(master)
         self.entry = ctk.CTkEntry(self, width=260)
         self.entry.grid(row=0, column=0, columnspan=5, padx=1, pady=1)
@@ -77,7 +79,6 @@ class MyButtonFrame(ctk.CTkFrame):  # Create buttons
                     result = eval(input_text)
                     self.entry.delete(0, ctk.END)
                     self.entry.insert(0, str(result))
-                    console_callback(result)
                 except Exception as e:
                     self.entry.delete(0, ctk.END)
                     self.entry.insert(0, "Error")
@@ -119,23 +120,13 @@ class App(ctk.CTk): # Main loop
     def __init__(self):
         super().__init__()
         self.title('Calculator')
-        self.geometry('265x330')
+        self.geometry('262x291')
         self.grid_rowconfigure((0, 5), weight=1)
         self.grid_columnconfigure((0, 4), weight=1)
-        
+
         self.result = 0  # Variable to store the result
-        self.console_output = ctk.CTkTextbox(self, height=8, width=260)
-        self.console_output.grid(row=6, column=0, columnspan=5, padx=5, pady=5, sticky="w")
-        
-        self.button_frame = MyButtonFrame(self, console_callback=self.update_console)
+        self.button_frame = MyButtonFrame(self)
         self.button_frame.grid(row=0, column=0, padx=1, pady=(1, 0), sticky="w")
 
-    def update_console(self, result):
-        # Append the calculation and result to the console output
-        console_text = self.console_output.get("1.0", ctk.END)
-        self.console_output.delete("1.0", ctk.END)
-        console_text += f"{self.button_frame.entry.get()} = {result}\n"
-        self.console_output.insert(ctk.END, console_text)
-        
 app = App()
 app.mainloop()
